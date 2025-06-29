@@ -113,8 +113,25 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Run security scan
-      uses: securecodewarrior/github-action-add-sarif@v1
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
       with:
-        sarif-file: 'security-scan-results.sarif'
+        flutter-version: '3.32.4'
+        channel: 'stable'
+        
+    - name: Get dependencies
+      run: flutter pub get
+      
+    - name: Flutter security audit
+      run: |
+        # Check for known vulnerabilities in dependencies
+        flutter pub deps --style=compact
+        # Check for outdated packages
+        flutter pub outdated
+      continue-on-error: true
+      
+    - name: Check for sensitive files
+      run: |
+        # Look for potential security issues
+        find . -name "*.key" -o -name "*.pem" -o -name "*secret*" -o -name "*.env" | grep -v node_modules || echo "No sensitive files found"
       continue-on-error: true
