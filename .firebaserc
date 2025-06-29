@@ -1,14 +1,5 @@
 {
   "projects": {
-    "default": "rentalyze-app"
-  },
-  "targets": {
-    "rentalyze-app": {
-      "hosting": {
-        "production": [
-          "rentalyze-app"
-        ]
-      }
-    }
+    "default": "your-actual-project-id"
   }
 }
