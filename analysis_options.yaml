@@ -28,7 +28,11 @@ analyzer:
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
-    - "lib/temp_auth_files/**"
+    - "lib/core/models/**"
+    - "lib/core/providers/**"
+    - "lib/core/services/**"
+    - "lib/core/screens/**"
+    - "lib/features/**"
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

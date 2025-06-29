@@ -15,8 +15,10 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const ProviderScope(child: RentalyzeApp()));
 
-    // Verify that our app shows the Rentalyze title.
+    // Verify that our app shows the Rentalyze title and login button.
     expect(find.text('Rentalyze'), findsOneWidget);
     expect(find.text('Welcome to Rentalyze'), findsOneWidget);
+    expect(find.text('Login'), findsOneWidget);
+    expect(find.text('Get Started'), findsOneWidget);
   });
 }
