@@ -45,24 +45,28 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await ref.read(authControllerProvider).signUpWithEmail(
-        _emailController.text.trim(),
-        _passwordController.text,
-        _nameController.text.trim(),
-      );
-      
+      await ref
+          .read(authControllerProvider)
+          .signUpWithEmail(
+            _emailController.text.trim(),
+            _passwordController.text,
+            _nameController.text.trim(),
+          );
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Account created successfully! Please verify your email.'),
+            content: Text(
+              'Account created successfully! Please verify your email.',
+            ),
           ),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -75,9 +79,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       await ref.read(authControllerProvider).signInWithGoogle();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -90,9 +94,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       await ref.read(authControllerProvider).signInWithApple();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -105,9 +109,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       await ref.read(authControllerProvider).signInWithFacebook();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -144,16 +148,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   const SizedBox(height: 8),
                   Text(
                     'Join Rentalyze to manage your properties',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
                     textAlign: TextAlign.center,
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Form
               Form(
                 key: _formKey,
@@ -185,7 +189,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         if (value?.isEmpty ?? true) {
                           return 'Please enter your email';
                         }
-                        if (!RegExp(r'^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$').hasMatch(value!)) {
+                        if (!RegExp(
+                          r'^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$',
+                        ).hasMatch(value!)) {
                           return 'Please enter a valid email';
                         }
                         return null;
@@ -200,7 +206,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       prefixIcon: Icons.lock_outlined,
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                          _obscurePassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
                         onPressed: () {
                           setState(() => _obscurePassword = !_obscurePassword);
@@ -225,10 +233,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       prefixIcon: Icons.lock_outlined,
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+                          _obscureConfirmPassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
                         onPressed: () {
-                          setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
+                          setState(
+                            () => _obscureConfirmPassword =
+                                !_obscureConfirmPassword,
+                          );
                         },
                       ),
                       validator: (value) {
@@ -244,9 +257,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Terms and Conditions
               Row(
                 children: [
@@ -283,9 +296,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Create Account Button
               FilledButton(
                 onPressed: _isLoading ? null : _signUpWithEmail,
@@ -303,12 +316,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       )
                     : const Text(
                         'Create Account',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Divider
               Row(
                 children: [
@@ -317,17 +333,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'Or sign up with',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                     ),
                   ),
                   const Expanded(child: Divider()),
                 ],
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Social Sign Up Buttons
               Column(
                 children: [
@@ -354,9 +370,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Sign In Link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -8,7 +8,8 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
@@ -29,12 +30,12 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await ref.read(authControllerProvider).sendPasswordResetEmail(
-        _emailController.text.trim(),
-      );
-      
+      await ref
+          .read(authControllerProvider)
+          .sendPasswordResetEmail(_emailController.text.trim());
+
       setState(() => _emailSent = true);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -45,9 +46,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -72,7 +73,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 40),
-              
+
               // Icon
               Container(
                 height: 80,
@@ -87,9 +88,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Title and description
               Text(
                 _emailSent ? 'Check Your Email' : 'Forgot Password?',
@@ -98,21 +99,21 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               Text(
-                _emailSent 
+                _emailSent
                     ? 'We\'ve sent a password reset link to ${_emailController.text}'
                     : 'Don\'t worry! Enter your email address and we\'ll send you a link to reset your password.',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey[600],
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
-              
+
               const SizedBox(height: 48),
-              
+
               if (!_emailSent) ...[
                 // Email form
                 Form(
@@ -127,16 +128,18 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       if (value?.isEmpty ?? true) {
                         return 'Please enter your email';
                       }
-                      if (!RegExp(r'^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$').hasMatch(value!)) {
+                      if (!RegExp(
+                        r'^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$',
+                      ).hasMatch(value!)) {
                         return 'Please enter a valid email';
                       }
                       return null;
                     },
                   ),
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Send Reset Link Button
                 FilledButton(
                   onPressed: _isLoading ? null : _sendResetEmail,
@@ -154,7 +157,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         )
                       : const Text(
                           'Send Reset Link',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                 ),
               ] else ...[
@@ -172,9 +178,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 OutlinedButton(
                   onPressed: () {
                     setState(() {
@@ -194,9 +200,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   ),
                 ),
               ],
-              
+
               const SizedBox(height: 32),
-              
+
               // Back to login link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

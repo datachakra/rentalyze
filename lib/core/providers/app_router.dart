@@ -14,8 +14,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/splash',
     redirect: (context, state) {
-      final isAuthPage = ['/login', '/register', '/forgot-password'].contains(state.matchedLocation);
-      
+      final isAuthPage = [
+        '/login',
+        '/register',
+        '/forgot-password',
+      ].contains(state.matchedLocation);
+
       return authState.when(
         data: (state) => state.when(
           loading: () => '/splash',

@@ -9,17 +9,13 @@ import '../models/user_model.dart';
 class AuthService {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'profile',
-    ],
-  );
-  
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+
   AuthService({
     required FirebaseAuth firebaseAuth,
     required FirebaseFirestore firestore,
-  }) : _firebaseAuth = firebaseAuth, _firestore = firestore;
+  }) : _firebaseAuth = firebaseAuth,
+       _firestore = firestore;
 
   // Auth state changes stream
   Stream<AuthState> get authStateChanges {
@@ -27,7 +23,7 @@ class AuthService {
       if (user == null) {
         return const AuthState.unauthenticated();
       }
-      
+
       try {
         final appUser = await _getUserData(user.uid);
         if (appUser != null) {
@@ -56,21 +52,25 @@ class AuthService {
   }
 
   // Email sign up
-  Future<UserCredential> signUpWithEmail(String email, String password, String displayName) async {
+  Future<UserCredential> signUpWithEmail(
+    String email,
+    String password,
+    String displayName,
+  ) async {
     try {
       final credential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      
+
       // Update display name
       await credential.user?.updateDisplayName(displayName);
-      
+
       // Create user document
       if (credential.user != null) {
         await _createUserDocument(credential.user!);
       }
-      
+
       return credential;
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
@@ -85,19 +85,22 @@ class AuthService {
         throw Exception('Google sign in was cancelled');
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final userCredential = await _firebaseAuth.signInWithCredential(credential);
-      
+      final userCredential = await _firebaseAuth.signInWithCredential(
+        credential,
+      );
+
       // Create or update user document
       if (userCredential.user != null) {
         await _createUserDocument(userCredential.user!);
       }
-      
+
       return userCredential;
     } catch (e) {
       throw Exception('Google sign in failed: $e');
@@ -119,13 +122,15 @@ class AuthService {
         accessToken: appleCredential.authorizationCode,
       );
 
-      final userCredential = await _firebaseAuth.signInWithCredential(oauthCredential);
-      
+      final userCredential = await _firebaseAuth.signInWithCredential(
+        oauthCredential,
+      );
+
       // Create or update user document
       if (userCredential.user != null) {
         await _createUserDocument(userCredential.user!);
       }
-      
+
       return userCredential;
     } catch (e) {
       throw Exception('Apple sign in failed: $e');
@@ -141,13 +146,15 @@ class AuthService {
         final OAuthCredential facebookAuthCredential =
             FacebookAuthProvider.credential(result.accessToken!.tokenString);
 
-        final userCredential = await _firebaseAuth.signInWithCredential(facebookAuthCredential);
-        
+        final userCredential = await _firebaseAuth.signInWithCredential(
+          facebookAuthCredential,
+        );
+
         // Create or update user document
         if (userCredential.user != null) {
           await _createUserDocument(userCredential.user!);
         }
-        
+
         return userCredential;
       } else {
         throw Exception('Facebook sign in failed: ${result.message}');

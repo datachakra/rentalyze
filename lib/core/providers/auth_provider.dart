@@ -60,7 +60,11 @@ class AuthController {
     await _authService.signInWithEmail(email, password);
   }
 
-  Future<void> signUpWithEmail(String email, String password, String displayName) async {
+  Future<void> signUpWithEmail(
+    String email,
+    String password,
+    String displayName,
+  ) async {
     await _authService.signUpWithEmail(email, password, displayName);
   }
 

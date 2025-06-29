@@ -5,12 +5,10 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(const ProviderScope(child: RentalyzeApp()));
 }
 
@@ -35,9 +33,7 @@ class RentalyzeApp extends StatelessWidget {
         brightness: Brightness.light,
       ),
       inputDecorationTheme: InputDecorationTheme(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 16,
@@ -48,10 +44,7 @@ class RentalyzeApp extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 16,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -59,10 +52,7 @@ class RentalyzeApp extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 16,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         ),
       ),
       appBarTheme: const AppBarTheme(
@@ -72,9 +62,7 @@ class RentalyzeApp extends StatelessWidget {
       ),
       cardTheme: CardThemeData(
         elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
   }
@@ -121,10 +109,11 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       'Welcome to Rentalyze',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -137,18 +126,18 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Features Section
             Text(
               'Features Coming Soon',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
+
             GridView.count(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -189,9 +178,9 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Status Section
             Card(
               child: Padding(
@@ -208,9 +197,8 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(width: 12),
                         Text(
                           'Development Status',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -280,17 +268,17 @@ class _FeatureCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               title,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 4),
             Text(
               description,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -324,24 +312,15 @@ class _StatusItem extends StatelessWidget {
             height: 20,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isComplete 
-                  ? Colors.green 
-                  : Colors.grey[300],
+              color: isComplete ? Colors.green : Colors.grey[300],
             ),
             child: isComplete
-                ? const Icon(
-                    Icons.check,
-                    size: 14,
-                    color: Colors.white,
-                  )
+                ? const Icon(Icons.check, size: 14, color: Colors.white)
                 : null,
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            child: Text(title, style: Theme.of(context).textTheme.bodyMedium),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -349,8 +328,8 @@ class _StatusItem extends StatelessWidget {
               color: isComplete
                   ? Colors.green.withOpacity(0.1)
                   : status == 'In Progress'
-                      ? Colors.orange.withOpacity(0.1)
-                      : Colors.grey.withOpacity(0.1),
+                  ? Colors.orange.withOpacity(0.1)
+                  : Colors.grey.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -361,8 +340,8 @@ class _StatusItem extends StatelessWidget {
                 color: isComplete
                     ? Colors.green[700]
                     : status == 'In Progress'
-                        ? Colors.orange[700]
-                        : Colors.grey[700],
+                    ? Colors.orange[700]
+                    : Colors.grey[700],
               ),
             ),
           ),

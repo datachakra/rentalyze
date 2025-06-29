@@ -16,14 +16,14 @@ class HomeScreen extends ConsumerWidget {
         actions: [
           PopupMenuButton(
             icon: CircleAvatar(
-              backgroundImage: user?.photoURL != null 
-                  ? NetworkImage(user!.photoURL!) 
+              backgroundImage: user?.photoURL != null
+                  ? NetworkImage(user!.photoURL!)
                   : null,
-              child: user?.photoURL == null 
+              child: user?.photoURL == null
                   ? Text(
-                      user?.displayName?.substring(0, 1).toUpperCase() ?? 
-                      user?.email.substring(0, 1).toUpperCase() ?? 
-                      'U',
+                      user?.displayName?.substring(0, 1).toUpperCase() ??
+                          user?.email.substring(0, 1).toUpperCase() ??
+                          'U',
                     )
                   : null,
             ),
@@ -72,33 +72,32 @@ class HomeScreen extends ConsumerWidget {
                   children: [
                     Text(
                       'Welcome back, ${user?.displayName ?? 'User'}!',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Here\'s your portfolio overview',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
                     ),
                   ],
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Quick Stats
             Text(
               'Portfolio Overview',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
+
             Row(
               children: [
                 Expanded(
@@ -120,9 +119,9 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             Row(
               children: [
                 Expanded(
@@ -144,18 +143,18 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Quick Actions
             Text(
               'Quick Actions',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
+
             GridView.count(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -170,7 +169,9 @@ class HomeScreen extends ConsumerWidget {
                   onTap: () {
                     // Navigate to add property
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Add Property - Coming Soon!')),
+                      const SnackBar(
+                        content: Text('Add Property - Coming Soon!'),
+                      ),
                     );
                   },
                 ),
@@ -180,7 +181,9 @@ class HomeScreen extends ConsumerWidget {
                   onTap: () {
                     // Navigate to properties list
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Property List - Coming Soon!')),
+                      const SnackBar(
+                        content: Text('Property List - Coming Soon!'),
+                      ),
                     );
                   },
                 ),
@@ -200,7 +203,9 @@ class HomeScreen extends ConsumerWidget {
                   onTap: () {
                     // Navigate to tenant management
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Tenant Management - Coming Soon!')),
+                      const SnackBar(
+                        content: Text('Tenant Management - Coming Soon!'),
+                      ),
                     );
                   },
                 ),
@@ -250,16 +255,16 @@ class _StatCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               value,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
               title,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
             ),
           ],
         ),
@@ -297,7 +302,7 @@ class _ActionCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  icon, 
+                  icon,
                   color: Theme.of(context).colorScheme.primary,
                   size: 32,
                 ),
@@ -305,9 +310,9 @@ class _ActionCard extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 title,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
             ],

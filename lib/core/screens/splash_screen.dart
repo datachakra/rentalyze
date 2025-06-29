@@ -41,9 +41,7 @@ class SplashScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 60),
-            const CircularProgressIndicator(
-              color: Colors.white,
-            ),
+            const CircularProgressIndicator(color: Colors.white),
           ],
         ),
       ),
