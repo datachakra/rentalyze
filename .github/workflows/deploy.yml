@@ -1,8 +1,7 @@
-name: Deploy to Firebase Hosting
+name: Deploy to Firebase Hosting (Disabled - Need Token)
 
 on:
-  push:
-    branches: [ main ]
+  # Temporarily disabled until FIREBASE_TOKEN is configured
   workflow_dispatch:
 
 jobs:

@@ -1,0 +1,50 @@
+name: Deploy to Firebase Hosting (Temporary - Skip Firebase)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-only:
+    name: Build Web App (Skip Deploy)
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.32.4'
+        channel: 'stable'
+        
+    - name: Get dependencies
+      run: flutter pub get
+      
+    - name: Enable web platform
+      run: flutter config --enable-web
+      
+    - name: Build web app
+      run: flutter build web --release --base-href "/"
+      
+    - name: Upload web build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: web-build-ready-for-firebase
+        path: build/web/
+        retention-days: 30
+        
+    - name: Build successful
+      run: |
+        echo "✅ Web app built successfully!"
+        echo "📁 Build artifacts uploaded"
+        echo "🚀 Ready for Firebase deployment once token is configured"
+        echo ""
+        echo "Next steps:"
+        echo "1. Set up Firebase CLI: npm install -g firebase-tools"
+        echo "2. Login: firebase login"
+        echo "3. Generate token: firebase login:ci"
+        echo "4. Add FIREBASE_TOKEN to GitHub Secrets"
+        echo "5. Enable main deploy.yml workflow"
