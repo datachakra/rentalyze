@@ -1,13 +1,15 @@
 {
-    "name": "rentalyze",
-    "short_name": "rentalyze",
-    "start_url": ".",
+    "name": "Rentalyze - Real Estate Portfolio Management",
+    "short_name": "Rentalyze",
+    "start_url": "https://rentalyze.datachakra.net/",
+    "scope": "https://rentalyze.datachakra.net/",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#1976D2",
+    "theme_color": "#1976D2",
+    "description": "Comprehensive real estate portfolio management app for property investors. Track properties, manage tenants, analyze performance, and optimize your rental investments.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
+    "categories": ["business", "finance", "productivity"],
     "icons": [
         {
             "src": "icons/Icon-192.png",
