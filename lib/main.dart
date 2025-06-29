@@ -106,19 +106,28 @@ class AuthWrapper extends ConsumerWidget {
 // Authentication Service
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile'],
+  );
 
   Future<User?> signInWithGoogle() async {
     try {
+      // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      
+      // If the user cancels the sign-in process
       if (googleUser == null) return null;
 
+      // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      
+      // Create a new credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
+      // Sign in to Firebase with the Google credential
       final UserCredential result = await _auth.signInWithCredential(credential);
       return result.user;
     } catch (e) {
