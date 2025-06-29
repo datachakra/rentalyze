@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'firebase_options.dart';
+
+// Auth service provider
+final authServiceProvider = Provider<AuthService>((ref) => AuthService());
+
+// Auth state provider
+final authStateProvider = StreamProvider<User?>((ref) {
+  return FirebaseAuth.instance.authStateChanges();
+});
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,16 +22,16 @@ void main() async {
   runApp(const ProviderScope(child: RentalyzeApp()));
 }
 
-class RentalyzeApp extends StatelessWidget {
+class RentalyzeApp extends ConsumerWidget {
   const RentalyzeApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'Rentalyze',
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(),
-      home: const LandingScreen(),
+      home: const AuthWrapper(),
     );
   }
 
@@ -65,6 +75,63 @@ class RentalyzeApp extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
+  }
+}
+
+// Auth wrapper to handle authentication state
+class AuthWrapper extends ConsumerWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authStateProvider);
+    
+    return authState.when(
+      data: (user) {
+        if (user != null) {
+          return const HomeScreen();
+        }
+        return const LandingScreen();
+      },
+      loading: () => const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+      error: (error, stackTrace) => const LandingScreen(),
+    );
+  }
+}
+
+// Authentication Service
+class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  Future<User?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) return null;
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential result = await _auth.signInWithCredential(credential);
+      return result.user;
+    } catch (e) {
+      print('Google sign in error: $e');
+      return null;
+    }
+  }
+
+  Future<void> signOut() async {
+    await Future.wait([
+      _auth.signOut(),
+      _googleSignIn.signOut(),
+    ]);
   }
 }
 
@@ -293,9 +360,40 @@ class LandingScreen extends StatelessWidget {
   }
 }
 
-// Simple Login Screen for now
-class LoginScreen extends StatelessWidget {
+// Real Login Screen with Firebase Auth
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  bool _isLoading = false;
+
+  Future<void> _signInWithGoogle() async {
+    setState(() => _isLoading = true);
+    
+    try {
+      final authService = ref.read(authServiceProvider);
+      final user = await authService.signInWithGoogle();
+      
+      if (user != null && mounted) {
+        // Auth wrapper will handle navigation automatically
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Sign in failed: ${e.toString()}')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -334,15 +432,15 @@ class LoginScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: () {
-                  // Navigate to actual dashboard
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
-                },
-                icon: const Icon(Icons.g_mobiledata),
-                label: const Text('Continue with Google'),
+                onPressed: _isLoading ? null : _signInWithGoogle,
+                icon: _isLoading 
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.g_mobiledata),
+                label: Text(_isLoading ? 'Signing in...' : 'Continue with Google'),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
@@ -380,12 +478,14 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-// Simple Dashboard
-class HomeScreen extends StatelessWidget {
+// Dashboard with real auth
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authStateProvider);
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
@@ -394,32 +494,49 @@ class HomeScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LandingScreen()),
-              );
+            onPressed: () async {
+              final authService = ref.read(authServiceProvider);
+              await authService.signOut();
             },
             icon: const Icon(Icons.logout),
           ),
         ],
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.dashboard, size: 80, color: Color(0xFF6366F1)),
-            SizedBox(height: 24),
-            Text(
-              'Welcome to your Dashboard!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Property management features coming soon...',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ],
+      body: authState.when(
+        data: (user) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (user?.photoURL != null)
+                CircleAvatar(
+                  radius: 40,
+                  backgroundImage: NetworkImage(user!.photoURL!),
+                ),
+              const SizedBox(height: 16),
+              const Icon(Icons.dashboard, size: 80, color: Color(0xFF6366F1)),
+              const SizedBox(height: 24),
+              Text(
+                'Welcome${user?.displayName != null ? ', ${user!.displayName}' : ''}!',
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              if (user?.email != null)
+                Text(
+                  user!.email!,
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                ),
+              const SizedBox(height: 24),
+              const Text(
+                'Property management features coming soon...',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => Center(
+          child: Text('Error: $error'),
         ),
       ),
     );
