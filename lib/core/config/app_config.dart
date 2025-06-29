@@ -5,7 +5,7 @@ class AppConfig {
   static const String appVersion = '1.0.0';
   
   // Virtual Domain Configuration (Smart Hack using datachakra.net)
-  static const String virtualDomain = 'rentalyze.app';           // What users see
+  static const String virtualDomain = 'rentalyze.io';           // What users see
   static const String realDomain = 'rentalyze.datachakra.net';  // Actual hosting
   static const String webUrl = 'https://rentalyze.datachakra.net';
   static const String apiUrl = 'https://rentalyze.datachakra.net/api';

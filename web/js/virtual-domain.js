@@ -1,11 +1,11 @@
 /**
  * Virtual Domain Masking for Rentalyze
- * Creates the illusion of rentalyze.app while using datachakra.net infrastructure
+ * Creates the illusion of rentalyze.io while using datachakra.net infrastructure
  */
 
 class VirtualDomainManager {
   constructor() {
-    this.virtualDomain = 'rentalyze.app';
+    this.virtualDomain = 'rentalyze.io';
     this.realDomain = 'datachakra.net';
     this.subdomain = 'rentalyze.datachakra.net';
     this.init();
