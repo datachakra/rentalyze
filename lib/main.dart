@@ -129,7 +129,8 @@ class AuthService {
       );
       return result.user;
     } catch (e) {
-      print('Google sign in error: $e');
+      // Log error for debugging
+      debugPrint('Google sign in error: $e');
       return null;
     }
   }
