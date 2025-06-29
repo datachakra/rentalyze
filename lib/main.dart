@@ -85,7 +85,7 @@ class AuthWrapper extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
-    
+
     return authState.when(
       data: (user) {
         if (user != null) {
@@ -93,11 +93,8 @@ class AuthWrapper extends ConsumerWidget {
         }
         return const LandingScreen();
       },
-      loading: () => const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (error, stackTrace) => const LandingScreen(),
     );
   }
@@ -106,21 +103,20 @@ class AuthWrapper extends ConsumerWidget {
 // Authentication Service
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email', 'profile'],
-  );
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
 
   Future<User?> signInWithGoogle() async {
     try {
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      
+
       // If the user cancels the sign-in process
       if (googleUser == null) return null;
 
       // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -128,7 +124,9 @@ class AuthService {
       );
 
       // Sign in to Firebase with the Google credential
-      final UserCredential result = await _auth.signInWithCredential(credential);
+      final UserCredential result = await _auth.signInWithCredential(
+        credential,
+      );
       return result.user;
     } catch (e) {
       print('Google sign in error: $e');
@@ -137,10 +135,7 @@ class AuthService {
   }
 
   Future<void> signOut() async {
-    await Future.wait([
-      _auth.signOut(),
-      _googleSignIn.signOut(),
-    ]);
+    await Future.wait([_auth.signOut(), _googleSignIn.signOut()]);
   }
 }
 
@@ -382,11 +377,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _signInWithGoogle() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final authService = ref.read(authServiceProvider);
       final user = await authService.signInWithGoogle();
-      
+
       if (user != null && mounted) {
         // Auth wrapper will handle navigation automatically
         Navigator.of(context).popUntil((route) => route.isFirst);
@@ -442,14 +437,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               width: double.infinity,
               child: FilledButton.icon(
                 onPressed: _isLoading ? null : _signInWithGoogle,
-                icon: _isLoading 
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.g_mobiledata),
-                label: Text(_isLoading ? 'Signing in...' : 'Continue with Google'),
+                icon: _isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.g_mobiledata),
+                label: Text(
+                  _isLoading ? 'Signing in...' : 'Continue with Google',
+                ),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
@@ -494,7 +491,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
@@ -526,7 +523,10 @@ class HomeScreen extends ConsumerWidget {
               const SizedBox(height: 24),
               Text(
                 'Welcome${user?.displayName != null ? ', ${user!.displayName}' : ''}!',
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
@@ -544,9 +544,7 @@ class HomeScreen extends ConsumerWidget {
           ),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => Center(
-          child: Text('Error: $error'),
-        ),
+        error: (error, stackTrace) => Center(child: Text('Error: $error')),
       ),
     );
   }
