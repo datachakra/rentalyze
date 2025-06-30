@@ -34,12 +34,14 @@ class RentalyzeApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
-      title: 'Rentalyze - Professional Real Estate Portfolio Management',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      // Skip auth for demo - go directly to property management app
-      home: const ProfessionalHomeScreen(),
+    return SelectionArea(
+      child: MaterialApp(
+        title: 'Rentalyze - Professional Real Estate Portfolio Management',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        // Skip auth for demo - go directly to property management app
+        home: const ProfessionalHomeScreen(),
+      ),
     );
   }
 }
@@ -464,15 +466,45 @@ class _ProfessionalHomeScreenState
     extends ConsumerState<ProfessionalHomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [
-    const ProfessionalDashboard(),
-    const ProfessionalPropertiesScreen(),
+  List<Widget> get _screens => [
+    ProfessionalDashboard(
+      onShowAddProperty: () => _showAddPropertyDialog(context),
+      onNavigateToProperties: () => setState(() => _currentIndex = 1),
+    ),
+    ProfessionalPropertiesScreen(
+      onShowAddProperty: () => _showAddPropertyDialog(context),
+    ),
     const ProfessionalAnalyticsScreen(),
     const ProfessionalFinancialScreen(),
     const ProfessionalCalculatorScreen(),
     const ProfessionalReportsScreen(),
     const ProfessionalSettingsScreen(),
   ];
+
+  void _showAddPropertyDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add New Property'),
+        content: const Text(
+          'Property creation feature coming soon!\nThis will open a comprehensive form to add property details, financials, and documentation.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // Future: Navigate to actual add property form
+            },
+            child: const Text('Get Started'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -493,7 +525,14 @@ class _ProfessionalHomeScreenState
 
 // Professional Dashboard with modern design
 class ProfessionalDashboard extends ConsumerWidget {
-  const ProfessionalDashboard({super.key});
+  final VoidCallback onShowAddProperty;
+  final VoidCallback onNavigateToProperties;
+
+  const ProfessionalDashboard({
+    required this.onShowAddProperty,
+    required this.onNavigateToProperties,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -509,9 +548,7 @@ class ProfessionalDashboard extends ConsumerWidget {
             ProfessionalActionButton(
               label: 'Add Property',
               icon: Icons.add,
-              onPressed: () {
-                // Navigate to add property screen
-              },
+              onPressed: onShowAddProperty,
             ),
           ],
         ),
@@ -697,9 +734,7 @@ class ProfessionalDashboard extends ConsumerWidget {
                       ),
                     ),
                     TextButton.icon(
-                      onPressed: () {
-                        // Navigate to properties screen
-                      },
+                      onPressed: onNavigateToProperties,
                       icon: const Icon(Icons.arrow_forward, size: 16),
                       label: const Text('View All Properties'),
                     ),
@@ -713,9 +748,9 @@ class ProfessionalDashboard extends ConsumerWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
-                    childAspectRatio: 1.1,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 2.8,
                   ),
                   itemCount: properties.take(4).length,
                   itemBuilder: (context, index) {
@@ -755,7 +790,12 @@ class ProfessionalDashboard extends ConsumerWidget {
 
 // Professional Properties Screen
 class ProfessionalPropertiesScreen extends ConsumerWidget {
-  const ProfessionalPropertiesScreen({super.key});
+  final VoidCallback onShowAddProperty;
+
+  const ProfessionalPropertiesScreen({
+    required this.onShowAddProperty,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -770,9 +810,7 @@ class ProfessionalPropertiesScreen extends ConsumerWidget {
             ProfessionalActionButton(
               label: 'Add Property',
               icon: Icons.add,
-              onPressed: () {
-                // Navigate to add property screen
-              },
+              onPressed: onShowAddProperty,
             ),
           ],
         ),
@@ -793,9 +831,9 @@ class ProfessionalPropertiesScreen extends ConsumerWidget {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 20,
-                          mainAxisSpacing: 20,
-                          childAspectRatio: 1.0,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 2.8,
                         ),
                     itemCount: properties.length,
                     itemBuilder: (context, index) {
