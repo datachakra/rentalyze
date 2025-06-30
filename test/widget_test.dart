@@ -11,14 +11,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rentalyze/main.dart';
 
 void main() {
-  testWidgets('Rentalyze app smoke test', (WidgetTester tester) async {
+  testWidgets('Rentalyze property management app smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const ProviderScope(child: RentalyzeApp()));
 
-    // Verify that our app shows the Rentalyze title and login button.
-    expect(find.text('Rentalyze'), findsOneWidget);
-    expect(find.text('Welcome to Rentalyze'), findsOneWidget);
-    expect(find.text('Login'), findsOneWidget);
-    expect(find.text('Get Started'), findsOneWidget);
+    // Wait for the app to load
+    await tester.pumpAndSettle();
+
+    // Verify that our app shows the dashboard with portfolio data
+    expect(find.text('Portfolio Dashboard'), findsOneWidget);
+    expect(find.text('Total Properties'), findsOneWidget);
+    expect(find.text('Portfolio Value'), findsOneWidget);
+    expect(find.text('Recent Properties'), findsOneWidget);
+    
+    // Verify bottom navigation is present
+    expect(find.text('Dashboard'), findsOneWidget);
+    expect(find.text('Properties'), findsOneWidget);
+    expect(find.text('Financial'), findsOneWidget);
+    expect(find.text('Settings'), findsOneWidget);
   });
 }
