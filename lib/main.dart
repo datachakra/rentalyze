@@ -35,7 +35,8 @@ class RentalyzeApp extends ConsumerWidget {
       title: 'Rentalyze',
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(),
-      home: const AuthWrapper(),
+      // Skip auth for demo - go directly to property management app
+      home: const HomeScreen(),
     );
   }
 
@@ -556,12 +557,27 @@ class DashboardTab extends ConsumerWidget {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () async {
-              final authService = ref.read(authServiceProvider);
-              await authService.signOut();
+            onPressed: () {
+              // Show demo info
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Demo Mode'),
+                  content: const Text(
+                    'This is a demo version of Rentalyze with sample data. '
+                    'Authentication features are disabled for demonstration purposes.',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              );
             },
-            icon: const Icon(Icons.logout),
-            tooltip: 'Sign Out',
+            icon: const Icon(Icons.info_outline),
+            tooltip: 'About Demo',
           ),
         ],
       ),
