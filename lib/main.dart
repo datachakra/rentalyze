@@ -4,10 +4,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'firebase_options.dart';
-import 'models/property.dart';
 import 'providers/property_providers.dart';
-import 'screens/properties_screen.dart';
 import 'screens/property_details_screen.dart';
+import 'theme/app_theme.dart';
+import 'widgets/professional_sidebar.dart';
+import 'widgets/professional_app_bar.dart';
+import 'widgets/professional_metric_card.dart';
+import 'widgets/professional_property_card.dart';
 
 // Auth service provider
 final authServiceProvider = Provider<AuthService>((ref) => AuthService());
@@ -32,53 +35,11 @@ class RentalyzeApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      title: 'Rentalyze',
+      title: 'Rentalyze - Professional Real Estate Portfolio Management',
       debugShowCheckedModeBanner: false,
-      theme: _buildTheme(),
+      theme: AppTheme.lightTheme,
       // Skip auth for demo - go directly to property management app
-      home: const HomeScreen(),
-    );
-  }
-
-  ThemeData _buildTheme() {
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFF6366F1),
-        brightness: Brightness.light,
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
-        ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        ),
-      ),
-      filledButtonTheme: FilledButtonThemeData(
-        style: FilledButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        ),
-      ),
-      appBarTheme: const AppBarTheme(
-        elevation: 0,
-        scrolledUnderElevation: 1,
-        centerTitle: false,
-      ),
-      cardTheme: CardThemeData(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      ),
+      home: const ProfessionalHomeScreen(),
     );
   }
 }
@@ -94,7 +55,7 @@ class AuthWrapper extends ConsumerWidget {
     return authState.when(
       data: (user) {
         if (user != null) {
-          return const HomeScreen();
+          return const ProfessionalHomeScreen();
         }
         return const LandingScreen();
       },
@@ -490,49 +451,39 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 }
 
-// Main dashboard with navigation
-class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+// Professional main screen with sidebar navigation
+class ProfessionalHomeScreen extends ConsumerStatefulWidget {
+  const ProfessionalHomeScreen({super.key});
 
   @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<ProfessionalHomeScreen> createState() => _ProfessionalHomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    const DashboardTab(),
-    const PropertiesScreen(),
-    const FinancialTab(),
-    const SettingsTab(),
+    const ProfessionalDashboard(),
+    const ProfessionalPropertiesScreen(),
+    const ProfessionalAnalyticsScreen(),
+    const ProfessionalFinancialScreen(),
+    const ProfessionalCalculatorScreen(),
+    const ProfessionalReportsScreen(),
+    const ProfessionalSettingsScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+      backgroundColor: AppTheme.surfaceGray50,
+      body: Row(
+        children: [
+          ProfessionalSidebar(
+            currentIndex: _currentIndex,
+            onItemSelected: (index) => setState(() => _currentIndex = index),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_work),
-            label: 'Properties',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.attach_money),
-            label: 'Financial',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+          Expanded(
+            child: _screens[_currentIndex],
           ),
         ],
       ),
@@ -540,251 +491,580 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-// Dashboard tab with portfolio overview
-class DashboardTab extends ConsumerWidget {
-  const DashboardTab({super.key});
+// Professional Dashboard with modern design
+class ProfessionalDashboard extends ConsumerWidget {
+  const ProfessionalDashboard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final summary = ref.watch(portfolioSummaryProvider);
     final properties = ref.watch(propertyListProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Portfolio Dashboard'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            onPressed: () {
-              // Show demo info
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Demo Mode'),
-                  content: const Text(
-                    'This is a demo version of Rentalyze with sample data. '
-                    'Authentication features are disabled for demonstration purposes.',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
-              );
-            },
-            icon: const Icon(Icons.info_outline),
-            tooltip: 'About Demo',
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Portfolio Summary Cards
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 1.2,
-              children: [
-                _SummaryCard(
-                  title: 'Total Properties',
-                  value: '${summary['totalProperties']}',
-                  icon: Icons.home_work,
-                  color: Colors.blue,
-                ),
-                _SummaryCard(
-                  title: 'Portfolio Value',
-                  value:
-                      '\$${(summary['totalValue'] / 1000).toStringAsFixed(0)}K',
-                  icon: Icons.trending_up,
-                  color: Colors.green,
-                ),
-                _SummaryCard(
-                  title: 'Monthly Income',
-                  value: '\$${summary['monthlyCashFlow'].toStringAsFixed(0)}',
-                  icon: Icons.attach_money,
-                  color: Colors.orange,
-                ),
-                _SummaryCard(
-                  title: 'Occupancy Rate',
-                  value: '${summary['occupancyRate'].toStringAsFixed(1)}%',
-                  icon: Icons.people,
-                  color: Colors.purple,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            // Recent Properties
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Recent Properties',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                TextButton(
-                  onPressed: () {
-                    // Navigate to properties tab
-                    Navigator.pushNamed(context, '/properties');
-                  },
-                  child: const Text('View All'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: properties.take(3).length,
-              itemBuilder: (context, index) {
-                final property = properties[index];
-                return _PropertyListTile(property: property);
+    return Column(
+      children: [
+        ProfessionalAppBar(
+          title: 'Portfolio Dashboard',
+          subtitle: 'Overview of your real estate investments',
+          actions: [
+            ProfessionalActionButton(
+              label: 'Add Property',
+              icon: Icons.add,
+              onPressed: () {
+                // Navigate to add property screen
               },
             ),
           ],
         ),
-      ),
-    );
-  }
-}
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Key Metrics Grid
+                GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  childAspectRatio: 1.1,
+                  children: [
+                    ProfessionalMetricCard(
+                      title: 'Total Properties',
+                      value: '${summary['totalProperties']}',
+                      icon: Icons.home_work_outlined,
+                      color: AppTheme.primaryBlue,
+                      trend: '+2.5%',
+                      isPositive: true,
+                    ),
+                    ProfessionalMetricCard(
+                      title: 'Portfolio Value',
+                      value: '\$${_formatCurrency(summary['totalValue'])}',
+                      icon: Icons.trending_up_outlined,
+                      color: AppTheme.successGreen,
+                      trend: '+8.2%',
+                      isPositive: true,
+                    ),
+                    ProfessionalMetricCard(
+                      title: 'Monthly Income',
+                      value: '\$${_formatCurrency(summary['monthlyCashFlow'])}',
+                      icon: Icons.account_balance_wallet_outlined,
+                      color: AppTheme.secondaryBlue,
+                      trend: '+12.4%',
+                      isPositive: true,
+                    ),
+                    ProfessionalMetricCard(
+                      title: 'Occupancy Rate',
+                      value: '${summary['occupancyRate'].toStringAsFixed(1)}%',
+                      icon: Icons.people_outline,
+                      color: AppTheme.warningOrange,
+                      trend: '+3.1%',
+                      isPositive: true,
+                    ),
+                  ],
+                ),
 
-class _SummaryCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final IconData icon;
-  final Color color;
+                const SizedBox(height: 32),
 
-  const _SummaryCard({
-    required this.title,
-    required this.value,
-    required this.icon,
-    required this.color,
-  });
+                // Performance Overview Section
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Performance Chart Section
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceWhite,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppTheme.surfaceGray200),
+                          boxShadow: AppShadows.softShadow,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Portfolio Performance',
+                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                        fontWeight: FontWeight.w700,
+                                        color: AppTheme.textPrimary,
+                                      ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.successGreen.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    'ROI: ${summary['portfolioROI'].toStringAsFixed(1)}%',
+                                    style: const TextStyle(
+                                      color: AppTheme.successGreen,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            // Placeholder for chart - in real app would be a chart widget
+                            Container(
+                              height: 200,
+                              decoration: BoxDecoration(
+                                color: AppTheme.surfaceGray50,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  'Performance Chart\n(Chart widget would go here)',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: AppTheme.textMuted,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 32),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+                    const SizedBox(width: 20),
+
+                    // Quick Stats
+                    Expanded(
+                      child: Column(
+                        children: [
+                          CompactMetricCard(
+                            label: 'Annual Cash Flow',
+                            value: '\$${_formatCurrency(summary['annualCashFlow'])}',
+                            icon: Icons.trending_up,
+                            color: AppTheme.successGreen,
+                            change: '+15.2%',
+                            isPositive: true,
+                          ),
+                          const SizedBox(height: 16),
+                          CompactMetricCard(
+                            label: 'Total Equity',
+                            value: '\$${_formatCurrency(summary['totalEquity'])}',
+                            icon: Icons.account_balance,
+                            color: AppTheme.primaryBlue,
+                            change: '+22.1%',
+                            isPositive: true,
+                          ),
+                          const SizedBox(height: 16),
+                          CompactMetricCard(
+                            label: 'Avg. Cap Rate',
+                            value: '${(summary['portfolioROI'] * 0.85).toStringAsFixed(1)}%',
+                            icon: Icons.percent,
+                            color: AppTheme.secondaryBlue,
+                            change: '+0.8%',
+                            isPositive: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 32),
+
+                // Recent Properties Section
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Recent Properties',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: AppTheme.textPrimary,
+                          ),
+                    ),
+                    TextButton.icon(
+                      onPressed: () {
+                        // Navigate to properties screen
+                      },
+                      icon: const Icon(Icons.arrow_forward, size: 16),
+                      label: const Text('View All Properties'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Properties Grid
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20,
+                    childAspectRatio: 1.1,
+                  ),
+                  itemCount: properties.take(4).length,
+                  itemBuilder: (context, index) {
+                    final property = properties[index];
+                    return ProfessionalPropertyCard(
+                      property: property,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PropertyDetailsScreen(property: property),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
             ),
-            const SizedBox(height: 4),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.bodySmall,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _PropertyListTile extends StatelessWidget {
-  final Property property;
-
-  const _PropertyListTile({required this.property});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: _getStatusColor(
-            property.status,
-          ).withValues(alpha: 0.1),
-          child: Icon(
-            _getPropertyIcon(property.type),
-            color: _getStatusColor(property.status),
           ),
         ),
-        title: Text(property.name),
-        subtitle: Text(property.fullAddress),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              '\$${property.monthlyRent.toStringAsFixed(0)}/mo',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(
-              property.statusDisplayName,
-              style: TextStyle(
-                color: _getStatusColor(property.status),
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PropertyDetailsScreen(property: property),
-            ),
-          );
-        },
-      ),
+      ],
     );
   }
 
-  Color _getStatusColor(PropertyStatus status) {
-    switch (status) {
-      case PropertyStatus.occupied:
-        return Colors.green;
-      case PropertyStatus.vacant:
-        return Colors.orange;
-      case PropertyStatus.maintenance:
-        return Colors.red;
-      case PropertyStatus.forSale:
-        return Colors.blue;
-    }
-  }
-
-  IconData _getPropertyIcon(PropertyType type) {
-    switch (type) {
-      case PropertyType.singleFamily:
-        return Icons.home;
-      case PropertyType.multiFamily:
-        return Icons.apartment;
-      case PropertyType.condo:
-        return Icons.business;
-      case PropertyType.townhouse:
-        return Icons.villa;
-      case PropertyType.apartment:
-        return Icons.location_city;
-      case PropertyType.commercial:
-        return Icons.store;
+  String _formatCurrency(double value) {
+    if (value >= 1000000) {
+      return '${(value / 1000000).toStringAsFixed(1)}M';
+    } else if (value >= 1000) {
+      return '${(value / 1000).toStringAsFixed(0)}K';
+    } else {
+      return value.toStringAsFixed(0);
     }
   }
 }
+
+// Professional Properties Screen
+class ProfessionalPropertiesScreen extends ConsumerWidget {
+  const ProfessionalPropertiesScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final properties = ref.watch(propertyListProvider);
+
+    return Column(
+      children: [
+        ProfessionalAppBar(
+          title: 'Properties',
+          subtitle: '${properties.length} properties in your portfolio',
+          actions: [
+            ProfessionalActionButton(
+              label: 'Add Property',
+              icon: Icons.add,
+              onPressed: () {
+                // Navigate to add property screen
+              },
+            ),
+          ],
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              children: [
+                ProfessionalSearchBar(
+                  hintText: 'Search properties...',
+                  onFilterTap: () {
+                    // Show filter dialog
+                  },
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
+                      childAspectRatio: 1.0,
+                    ),
+                    itemCount: properties.length,
+                    itemBuilder: (context, index) {
+                      final property = properties[index];
+                      return ProfessionalPropertyCard(
+                        property: property,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PropertyDetailsScreen(property: property),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Professional Analytics Screen
+class ProfessionalAnalyticsScreen extends StatelessWidget {
+  const ProfessionalAnalyticsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const ProfessionalAppBar(
+          title: 'Analytics',
+          subtitle: 'Performance insights and market analysis',
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.analytics_outlined,
+                    size: 80,
+                    color: AppTheme.textMuted,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Advanced Analytics',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.textPrimary,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Detailed performance charts and market insights\ncoming in the next update.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppTheme.textSecondary,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Professional Financial Screen
+class ProfessionalFinancialScreen extends StatelessWidget {
+  const ProfessionalFinancialScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const ProfessionalAppBar(
+          title: 'Financial',
+          subtitle: 'Income, expenses, and financial reports',
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.account_balance_wallet_outlined,
+                    size: 80,
+                    color: AppTheme.textMuted,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Financial Management',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.textPrimary,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Track income, expenses, and generate\nfinancial reports for your properties.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppTheme.textSecondary,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Professional Calculator Screen
+class ProfessionalCalculatorScreen extends StatelessWidget {
+  const ProfessionalCalculatorScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const ProfessionalAppBar(
+          title: 'ROI Calculator',
+          subtitle: 'Investment analysis and profitability tools',
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.calculate_outlined,
+                    size: 80,
+                    color: AppTheme.textMuted,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Investment Calculator',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.textPrimary,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Calculate ROI, cash flow, and\nanalyze investment opportunities.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppTheme.textSecondary,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Professional Reports Screen
+class ProfessionalReportsScreen extends StatelessWidget {
+  const ProfessionalReportsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const ProfessionalAppBar(
+          title: 'Reports',
+          subtitle: 'Generate detailed portfolio reports',
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.assessment_outlined,
+                    size: 80,
+                    color: AppTheme.textMuted,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Portfolio Reports',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.textPrimary,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Generate comprehensive reports\nfor tax and investment analysis.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppTheme.textSecondary,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Professional Settings Screen
+class ProfessionalSettingsScreen extends StatelessWidget {
+  const ProfessionalSettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const ProfessionalAppBar(
+          title: 'Settings',
+          subtitle: 'Account preferences and configuration',
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.settings_outlined,
+                    size: 80,
+                    color: AppTheme.textMuted,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Settings & Preferences',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.textPrimary,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Customize your experience and\nmanage account settings.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppTheme.textSecondary,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 
 // Placeholder tabs
 class FinancialTab extends StatelessWidget {
