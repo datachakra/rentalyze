@@ -83,9 +83,8 @@ class PropertyDetailsScreen extends ConsumerWidget {
                           children: [
                             Text(
                               property.name,
-                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 4),
                             Text(
@@ -104,7 +103,9 @@ class PropertyDetailsScreen extends ConsumerWidget {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: _getStatusColor(property.status).withValues(alpha: 0.1),
+                          color: _getStatusColor(
+                            property.status,
+                          ).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -137,15 +138,19 @@ class PropertyDetailsScreen extends ConsumerWidget {
                       ),
                       _FinancialCard(
                         title: 'Monthly Expenses',
-                        value: '\$${property.monthlyExpenses.toStringAsFixed(0)}',
+                        value:
+                            '\$${property.monthlyExpenses.toStringAsFixed(0)}',
                         icon: Icons.trending_down,
                         color: Colors.red,
                       ),
                       _FinancialCard(
                         title: 'Cash Flow',
-                        value: '\$${property.monthlyCashFlow.toStringAsFixed(0)}',
+                        value:
+                            '\$${property.monthlyCashFlow.toStringAsFixed(0)}',
                         icon: Icons.account_balance_wallet,
-                        color: property.monthlyCashFlow >= 0 ? Colors.green : Colors.red,
+                        color: property.monthlyCashFlow >= 0
+                            ? Colors.green
+                            : Colors.red,
                       ),
                       _FinancialCard(
                         title: 'ROI',
@@ -164,20 +169,36 @@ class PropertyDetailsScreen extends ConsumerWidget {
                   _detailRow('Type', property.typeDisplayName),
                   _detailRow('Bedrooms', '${property.bedrooms}'),
                   _detailRow('Bathrooms', '${property.bathrooms}'),
-                  _detailRow('Square Feet', '${property.squareFeet.toStringAsFixed(0)} sq ft'),
-                  _detailRow('Purchase Price', '\$${property.purchasePrice.toStringAsFixed(0)}'),
-                  _detailRow('Current Value', '\$${property.currentValue.toStringAsFixed(0)}'),
-                  _detailRow('Purchase Date', _formatDate(property.purchaseDate)),
+                  _detailRow(
+                    'Square Feet',
+                    '${property.squareFeet.toStringAsFixed(0)} sq ft',
+                  ),
+                  _detailRow(
+                    'Purchase Price',
+                    '\$${property.purchasePrice.toStringAsFixed(0)}',
+                  ),
+                  _detailRow(
+                    'Current Value',
+                    '\$${property.currentValue.toStringAsFixed(0)}',
+                  ),
+                  _detailRow(
+                    'Purchase Date',
+                    _formatDate(property.purchaseDate),
+                  ),
 
                   const SizedBox(height: 24),
 
                   // Tenant Information (if occupied)
-                  if (property.status == PropertyStatus.occupied && property.tenantName != null) ...[
+                  if (property.status == PropertyStatus.occupied &&
+                      property.tenantName != null) ...[
                     _sectionTitle('Tenant Information'),
                     const SizedBox(height: 16),
                     _detailRow('Tenant', property.tenantName!),
                     if (property.leaseStart != null)
-                      _detailRow('Lease Start', _formatDate(property.leaseStart!)),
+                      _detailRow(
+                        'Lease Start',
+                        _formatDate(property.leaseStart!),
+                      ),
                     if (property.leaseEnd != null)
                       _detailRow('Lease End', _formatDate(property.leaseEnd!)),
                     const SizedBox(height: 24),
@@ -190,10 +211,16 @@ class PropertyDetailsScreen extends ConsumerWidget {
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
-                      children: property.amenities.map((amenity) => Chip(
-                        label: Text(amenity),
-                        backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                      )).toList(),
+                      children: property.amenities
+                          .map(
+                            (amenity) => Chip(
+                              label: Text(amenity),
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary.withValues(alpha: 0.1),
+                            ),
+                          )
+                          .toList(),
                     ),
                     const SizedBox(height: 24),
                   ],
@@ -204,10 +231,7 @@ class PropertyDetailsScreen extends ConsumerWidget {
                     const SizedBox(height: 16),
                     Text(
                       property.description!,
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        height: 1.5,
-                      ),
+                      style: TextStyle(color: Colors.grey[700], height: 1.5),
                     ),
                     const SizedBox(height: 24),
                   ],
@@ -220,16 +244,40 @@ class PropertyDetailsScreen extends ConsumerWidget {
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         children: [
-                          _analysisRow('Total Investment', '\$${property.purchasePrice.toStringAsFixed(0)}'),
-                          _analysisRow('Current Value', '\$${property.currentValue.toStringAsFixed(0)}'),
-                          _analysisRow('Equity Gain', '\$${property.equity.toStringAsFixed(0)}'),
+                          _analysisRow(
+                            'Total Investment',
+                            '\$${property.purchasePrice.toStringAsFixed(0)}',
+                          ),
+                          _analysisRow(
+                            'Current Value',
+                            '\$${property.currentValue.toStringAsFixed(0)}',
+                          ),
+                          _analysisRow(
+                            'Equity Gain',
+                            '\$${property.equity.toStringAsFixed(0)}',
+                          ),
                           const Divider(),
-                          _analysisRow('Monthly Income', '\$${property.monthlyRent.toStringAsFixed(0)}'),
-                          _analysisRow('Monthly Expenses', '\$${property.monthlyExpenses.toStringAsFixed(0)}'),
-                          _analysisRow('Monthly Cash Flow', '\$${property.monthlyCashFlow.toStringAsFixed(0)}'),
+                          _analysisRow(
+                            'Monthly Income',
+                            '\$${property.monthlyRent.toStringAsFixed(0)}',
+                          ),
+                          _analysisRow(
+                            'Monthly Expenses',
+                            '\$${property.monthlyExpenses.toStringAsFixed(0)}',
+                          ),
+                          _analysisRow(
+                            'Monthly Cash Flow',
+                            '\$${property.monthlyCashFlow.toStringAsFixed(0)}',
+                          ),
                           const Divider(),
-                          _analysisRow('Annual Cash Flow', '\$${property.annualCashFlow.toStringAsFixed(0)}'),
-                          _analysisRow('Annual ROI', '${property.annualROI.toStringAsFixed(2)}%'),
+                          _analysisRow(
+                            'Annual Cash Flow',
+                            '\$${property.annualCashFlow.toStringAsFixed(0)}',
+                          ),
+                          _analysisRow(
+                            'Annual ROI',
+                            '${property.annualROI.toStringAsFixed(2)}%',
+                          ),
                         ],
                       ),
                     ),
@@ -246,10 +294,7 @@ class PropertyDetailsScreen extends ConsumerWidget {
   Widget _sectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-      ),
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
     );
   }
 
@@ -273,10 +318,7 @@ class PropertyDetailsScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label),
-          Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -345,7 +387,9 @@ class PropertyDetailsScreen extends ConsumerWidget {
           ),
           FilledButton(
             onPressed: () {
-              ref.read(propertyListProvider.notifier).deleteProperty(property.id);
+              ref
+                  .read(propertyListProvider.notifier)
+                  .deleteProperty(property.id);
               Navigator.pop(context); // Close dialog
               Navigator.pop(context); // Go back to list
               ScaffoldMessenger.of(context).showSnackBar(

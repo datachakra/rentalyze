@@ -587,7 +587,8 @@ class DashboardTab extends ConsumerWidget {
                 ),
                 _SummaryCard(
                   title: 'Portfolio Value',
-                  value: '\$${(summary['totalValue'] / 1000).toStringAsFixed(0)}K',
+                  value:
+                      '\$${(summary['totalValue'] / 1000).toStringAsFixed(0)}K',
                   icon: Icons.trending_up,
                   color: Colors.green,
                 ),
@@ -614,9 +615,9 @@ class DashboardTab extends ConsumerWidget {
               children: [
                 Text(
                   'Recent Properties',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 TextButton(
                   onPressed: () {
@@ -699,7 +700,9 @@ class _PropertyListTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: _getStatusColor(property.status).withValues(alpha: 0.1),
+          backgroundColor: _getStatusColor(
+            property.status,
+          ).withValues(alpha: 0.1),
           child: Icon(
             _getPropertyIcon(property.type),
             color: _getStatusColor(property.status),
@@ -780,9 +783,7 @@ class FinancialTab extends StatelessWidget {
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
       ),
-      body: const Center(
-        child: Text('Financial features coming soon...'),
-      ),
+      body: const Center(child: Text('Financial features coming soon...')),
     );
   }
 }
@@ -799,9 +800,7 @@ class SettingsTab extends StatelessWidget {
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
       ),
-      body: const Center(
-        child: Text('Settings coming soon...'),
-      ),
+      body: const Center(child: Text('Settings coming soon...')),
     );
   }
 }

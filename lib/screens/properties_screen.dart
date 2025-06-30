@@ -66,8 +66,8 @@ class _PropertiesScreenState extends ConsumerState<PropertiesScreen> {
                         : null,
                   ),
                   onChanged: (value) {
-                    ref.read(propertyFilterProvider.notifier).state =
-                        filter.copyWith(searchQuery: value);
+                    ref.read(propertyFilterProvider.notifier).state = filter
+                        .copyWith(searchQuery: value);
                   },
                 ),
                 const SizedBox(height: 8),
@@ -113,9 +113,8 @@ class _PropertiesScreenState extends ConsumerState<PropertiesScreen> {
                         const SizedBox(height: 16),
                         Text(
                           'No properties found',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(color: Colors.grey[600]),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -153,10 +152,7 @@ class _PropertiesScreenState extends ConsumerState<PropertiesScreen> {
   }
 
   void _showFilterDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => const FilterDialog(),
-    );
+    showDialog(context: context, builder: (context) => const FilterDialog());
   }
 }
 
@@ -186,7 +182,9 @@ class PropertyCard extends StatelessWidget {
               height: 200,
               width: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12),
+                ),
                 image: property.imageUrl != null
                     ? DecorationImage(
                         image: NetworkImage(property.imageUrl!),
@@ -216,9 +214,8 @@ class PropertyCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           property.name,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                       ),
                       Container(
@@ -227,7 +224,9 @@ class PropertyCard extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: _getStatusColor(property.status).withValues(alpha: 0.1),
+                          color: _getStatusColor(
+                            property.status,
+                          ).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -247,7 +246,11 @@ class PropertyCard extends StatelessWidget {
                   // Address
                   Row(
                     children: [
-                      Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
+                      Icon(
+                        Icons.location_on,
+                        size: 16,
+                        color: Colors.grey[600],
+                      ),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
@@ -398,19 +401,21 @@ class FilterDialog extends ConsumerWidget {
                 selected: filter.status == null,
                 onSelected: (selected) {
                   if (selected) {
-                    ref.read(propertyFilterProvider.notifier).state =
-                        filter.copyWith(status: null);
+                    ref.read(propertyFilterProvider.notifier).state = filter
+                        .copyWith(status: null);
                   }
                 },
               ),
-              ...PropertyStatus.values.map((status) => ChoiceChip(
-                    label: Text(status.name),
-                    selected: filter.status == status,
-                    onSelected: (selected) {
-                      ref.read(propertyFilterProvider.notifier).state =
-                          filter.copyWith(status: selected ? status : null);
-                    },
-                  )),
+              ...PropertyStatus.values.map(
+                (status) => ChoiceChip(
+                  label: Text(status.name),
+                  selected: filter.status == status,
+                  onSelected: (selected) {
+                    ref.read(propertyFilterProvider.notifier).state = filter
+                        .copyWith(status: selected ? status : null);
+                  },
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -424,19 +429,21 @@ class FilterDialog extends ConsumerWidget {
                 selected: filter.type == null,
                 onSelected: (selected) {
                   if (selected) {
-                    ref.read(propertyFilterProvider.notifier).state =
-                        filter.copyWith(type: null);
+                    ref.read(propertyFilterProvider.notifier).state = filter
+                        .copyWith(type: null);
                   }
                 },
               ),
-              ...PropertyType.values.map((type) => ChoiceChip(
-                    label: Text(_getTypeDisplayName(type)),
-                    selected: filter.type == type,
-                    onSelected: (selected) {
-                      ref.read(propertyFilterProvider.notifier).state =
-                          filter.copyWith(type: selected ? type : null);
-                    },
-                  )),
+              ...PropertyType.values.map(
+                (type) => ChoiceChip(
+                  label: Text(_getTypeDisplayName(type)),
+                  selected: filter.type == type,
+                  onSelected: (selected) {
+                    ref.read(propertyFilterProvider.notifier).state = filter
+                        .copyWith(type: selected ? type : null);
+                  },
+                ),
+              ),
             ],
           ),
         ],

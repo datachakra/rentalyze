@@ -60,7 +60,10 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
             onPressed: _saveProperty,
             child: const Text(
               'Save',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -75,7 +78,7 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
               // Basic Information
               _sectionTitle('Basic Information'),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
@@ -89,9 +92,9 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _addressController,
                 decoration: const InputDecoration(
@@ -105,18 +108,16 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               Row(
                 children: [
                   Expanded(
                     flex: 2,
                     child: TextFormField(
                       controller: _cityController,
-                      decoration: const InputDecoration(
-                        labelText: 'City *',
-                      ),
+                      decoration: const InputDecoration(labelText: 'City *'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Required';
@@ -129,9 +130,7 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                   Expanded(
                     child: TextFormField(
                       controller: _stateController,
-                      decoration: const InputDecoration(
-                        labelText: 'State *',
-                      ),
+                      decoration: const InputDecoration(labelText: 'State *'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Required';
@@ -144,9 +143,7 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                   Expanded(
                     child: TextFormField(
                       controller: _zipController,
-                      decoration: const InputDecoration(
-                        labelText: 'ZIP *',
-                      ),
+                      decoration: const InputDecoration(labelText: 'ZIP *'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Required';
@@ -157,13 +154,13 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Property Details
               _sectionTitle('Property Details'),
               const SizedBox(height: 16),
-              
+
               DropdownButtonFormField<PropertyType>(
                 value: _selectedType,
                 decoration: const InputDecoration(labelText: 'Property Type'),
@@ -179,9 +176,9 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                   }
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               DropdownButtonFormField<PropertyStatus>(
                 value: _selectedStatus,
                 decoration: const InputDecoration(labelText: 'Status'),
@@ -197,9 +194,9 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                   }
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               Row(
                 children: [
                   Expanded(
@@ -227,13 +224,13 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Financial Information
               _sectionTitle('Financial Information'),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _purchasePriceController,
                 decoration: const InputDecoration(
@@ -248,9 +245,9 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _currentValueController,
                 decoration: const InputDecoration(
@@ -259,9 +256,9 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                 ),
                 keyboardType: TextInputType.number,
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               Row(
                 children: [
                   Expanded(
@@ -287,9 +284,9 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               InkWell(
                 onTap: () => _selectPurchaseDate(context),
                 child: InputDecorator(
@@ -300,13 +297,13 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                   child: Text(_formatDate(_purchaseDate)),
                 ),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Description
               _sectionTitle('Description'),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
@@ -315,9 +312,9 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                 ),
                 maxLines: 3,
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Save Button
               SizedBox(
                 width: double.infinity,
@@ -336,10 +333,7 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
   Widget _sectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-      ),
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
     );
   }
 
@@ -401,8 +395,10 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
         type: _selectedType,
         status: _selectedStatus,
         purchasePrice: double.tryParse(_purchasePriceController.text) ?? 0,
-        currentValue: double.tryParse(_currentValueController.text) ?? 
-                     double.tryParse(_purchasePriceController.text) ?? 0,
+        currentValue:
+            double.tryParse(_currentValueController.text) ??
+            double.tryParse(_purchasePriceController.text) ??
+            0,
         monthlyRent: double.tryParse(_monthlyRentController.text) ?? 0,
         monthlyExpenses: double.tryParse(_monthlyExpensesController.text) ?? 0,
         bedrooms: int.tryParse(_bedroomsController.text) ?? 0,
@@ -410,13 +406,13 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
         squareFeet: double.tryParse(_squareFeetController.text) ?? 0,
         purchaseDate: _purchaseDate,
         lastUpdated: DateTime.now(),
-        description: _descriptionController.text.isNotEmpty 
-                    ? _descriptionController.text 
-                    : null,
+        description: _descriptionController.text.isNotEmpty
+            ? _descriptionController.text
+            : null,
       );
 
       ref.read(propertyListProvider.notifier).addProperty(property);
-      
+
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('${property.name} added successfully!')),

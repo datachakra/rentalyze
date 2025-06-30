@@ -7,12 +7,7 @@ enum PropertyType {
   commercial,
 }
 
-enum PropertyStatus {
-  vacant,
-  occupied,
-  maintenance,
-  forSale,
-}
+enum PropertyStatus { vacant, occupied, maintenance, forSale }
 
 class Property {
   final String id;
@@ -66,20 +61,21 @@ class Property {
   });
 
   // Calculate ROI
-  double get monthlyROI => (monthlyRent - monthlyExpenses) / purchasePrice * 100;
-  
+  double get monthlyROI =>
+      (monthlyRent - monthlyExpenses) / purchasePrice * 100;
+
   // Calculate annual ROI
   double get annualROI => monthlyROI * 12;
-  
+
   // Calculate monthly cash flow
   double get monthlyCashFlow => monthlyRent - monthlyExpenses;
-  
+
   // Calculate annual cash flow
   double get annualCashFlow => monthlyCashFlow * 12;
-  
+
   // Calculate equity
   double get equity => currentValue - purchasePrice;
-  
+
   // Get property type display name
   String get typeDisplayName {
     switch (type) {
@@ -97,7 +93,7 @@ class Property {
         return 'Commercial';
     }
   }
-  
+
   // Get status display name
   String get statusDisplayName {
     switch (status) {
@@ -111,7 +107,7 @@ class Property {
         return 'For Sale';
     }
   }
-  
+
   // Get full address
   String get fullAddress => '$address, $city, $state $zipCode';
 }
