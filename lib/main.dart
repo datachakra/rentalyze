@@ -4,6 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'firebase_options.dart';
+import 'models/property.dart';
+import 'providers/property_providers.dart';
+import 'screens/properties_screen.dart';
+import 'screens/property_details_screen.dart';
 
 // Auth service provider
 final authServiceProvider = Provider<AuthService>((ref) => AuthService());
@@ -485,17 +489,68 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 }
 
-// Dashboard with real auth
-class HomeScreen extends ConsumerWidget {
+// Main dashboard with navigation
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    const DashboardTab(),
+    const PropertiesScreen(),
+    const FinancialTab(),
+    const SettingsTab(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_work),
+            label: 'Properties',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.attach_money),
+            label: 'Financial',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Dashboard tab with portfolio overview
+class DashboardTab extends ConsumerWidget {
+  const DashboardTab({super.key});
+
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateProvider);
+    final summary = ref.watch(portfolioSummaryProvider);
+    final properties = ref.watch(propertyListProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        title: const Text('Portfolio Dashboard'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
@@ -506,46 +561,246 @@ class HomeScreen extends ConsumerWidget {
               await authService.signOut();
             },
             icon: const Icon(Icons.logout),
+            tooltip: 'Sign Out',
           ),
         ],
       ),
-      body: authState.when(
-        data: (user) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (user?.photoURL != null)
-                CircleAvatar(
-                  radius: 40,
-                  backgroundImage: NetworkImage(user!.photoURL!),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Portfolio Summary Cards
+            GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 1.2,
+              children: [
+                _SummaryCard(
+                  title: 'Total Properties',
+                  value: '${summary['totalProperties']}',
+                  icon: Icons.home_work,
+                  color: Colors.blue,
                 ),
-              const SizedBox(height: 16),
-              const Icon(Icons.dashboard, size: 80, color: Color(0xFF6366F1)),
-              const SizedBox(height: 24),
-              Text(
-                'Welcome${user?.displayName != null ? ', ${user!.displayName}' : ''}!',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+                _SummaryCard(
+                  title: 'Portfolio Value',
+                  value: '\$${(summary['totalValue'] / 1000).toStringAsFixed(0)}K',
+                  icon: Icons.trending_up,
+                  color: Colors.green,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              if (user?.email != null)
+                _SummaryCard(
+                  title: 'Monthly Income',
+                  value: '\$${summary['monthlyCashFlow'].toStringAsFixed(0)}',
+                  icon: Icons.attach_money,
+                  color: Colors.orange,
+                ),
+                _SummaryCard(
+                  title: 'Occupancy Rate',
+                  value: '${summary['occupancyRate'].toStringAsFixed(1)}%',
+                  icon: Icons.people,
+                  color: Colors.purple,
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 24),
+
+            // Recent Properties
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Text(
-                  user!.email!,
-                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  'Recent Properties',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              const SizedBox(height: 24),
-              const Text(
-                'Property management features coming soon...',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                TextButton(
+                  onPressed: () {
+                    // Navigate to properties tab
+                    Navigator.pushNamed(context, '/properties');
+                  },
+                  child: const Text('View All'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: properties.take(3).length,
+              itemBuilder: (context, index) {
+                final property = properties[index];
+                return _PropertyListTile(property: property);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SummaryCard extends StatelessWidget {
+  final String title;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  const _SummaryCard({
+    required this.title,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: color,
               ),
-            ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PropertyListTile extends StatelessWidget {
+  final Property property;
+
+  const _PropertyListTile({required this.property});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: _getStatusColor(property.status).withValues(alpha: 0.1),
+          child: Icon(
+            _getPropertyIcon(property.type),
+            color: _getStatusColor(property.status),
           ),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => Center(child: Text('Error: $error')),
+        title: Text(property.name),
+        subtitle: Text(property.fullAddress),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              '\$${property.monthlyRent.toStringAsFixed(0)}/mo',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              property.statusDisplayName,
+              style: TextStyle(
+                color: _getStatusColor(property.status),
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PropertyDetailsScreen(property: property),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Color _getStatusColor(PropertyStatus status) {
+    switch (status) {
+      case PropertyStatus.occupied:
+        return Colors.green;
+      case PropertyStatus.vacant:
+        return Colors.orange;
+      case PropertyStatus.maintenance:
+        return Colors.red;
+      case PropertyStatus.forSale:
+        return Colors.blue;
+    }
+  }
+
+  IconData _getPropertyIcon(PropertyType type) {
+    switch (type) {
+      case PropertyType.singleFamily:
+        return Icons.home;
+      case PropertyType.multiFamily:
+        return Icons.apartment;
+      case PropertyType.condo:
+        return Icons.business;
+      case PropertyType.townhouse:
+        return Icons.villa;
+      case PropertyType.apartment:
+        return Icons.location_city;
+      case PropertyType.commercial:
+        return Icons.store;
+    }
+  }
+}
+
+// Placeholder tabs
+class FinancialTab extends StatelessWidget {
+  const FinancialTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Financial'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+      ),
+      body: const Center(
+        child: Text('Financial features coming soon...'),
+      ),
+    );
+  }
+}
+
+class SettingsTab extends StatelessWidget {
+  const SettingsTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+      ),
+      body: const Center(
+        child: Text('Settings coming soon...'),
       ),
     );
   }
