@@ -18,9 +18,7 @@ class ProfessionalSidebar extends StatelessWidget {
       height: double.infinity,
       decoration: const BoxDecoration(
         color: AppTheme.surfaceWhite,
-        border: Border(
-          right: BorderSide(color: AppTheme.surfaceGray200),
-        ),
+        border: Border(right: BorderSide(color: AppTheme.surfaceGray200)),
       ),
       child: Column(
         children: [
@@ -49,24 +47,24 @@ class ProfessionalSidebar extends StatelessWidget {
                     Text(
                       'Rentalyze',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: AppTheme.textPrimary,
-                          ),
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.textPrimary,
+                      ),
                     ),
                     Text(
                       'Portfolio Manager',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme.textTertiary,
-                          ),
+                        color: AppTheme.textTertiary,
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          
+
           const Divider(height: 1),
-          
+
           // Navigation Items
           Expanded(
             child: ListView(
@@ -104,21 +102,21 @@ class ProfessionalSidebar extends StatelessWidget {
                   isSelected: currentIndex == 3,
                   onTap: () => onItemSelected(3),
                 ),
-                
+
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
                     'TOOLS',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppTheme.textMuted,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
+                      color: AppTheme.textMuted,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
-                
+
                 _SidebarItem(
                   icon: Icons.calculate_outlined,
                   activeIcon: Icons.calculate,
@@ -135,21 +133,21 @@ class ProfessionalSidebar extends StatelessWidget {
                   isSelected: currentIndex == 5,
                   onTap: () => onItemSelected(5),
                 ),
-                
+
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
                     'ACCOUNT',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppTheme.textMuted,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
+                      color: AppTheme.textMuted,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
-                
+
                 _SidebarItem(
                   icon: Icons.settings_outlined,
                   activeIcon: Icons.settings,
@@ -161,14 +159,12 @@ class ProfessionalSidebar extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // User Profile Section
           Container(
             padding: const EdgeInsets.all(16),
             decoration: const BoxDecoration(
-              border: Border(
-                top: BorderSide(color: AppTheme.surfaceGray200),
-              ),
+              border: Border(top: BorderSide(color: AppTheme.surfaceGray200)),
             ),
             child: Row(
               children: [
@@ -193,14 +189,14 @@ class ProfessionalSidebar extends StatelessWidget {
                       Text(
                         'Demo User',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       Text(
                         'demo@rentalyze.io',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppTheme.textTertiary,
-                            ),
+                          color: AppTheme.textTertiary,
+                        ),
                       ),
                     ],
                   ),
@@ -268,7 +264,7 @@ class _SidebarItem extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
-              color: isSelected 
+              color: isSelected
                   ? AppTheme.primaryBlue.withValues(alpha: 0.1)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(12),
@@ -277,8 +273,8 @@ class _SidebarItem extends StatelessWidget {
               children: [
                 Icon(
                   isSelected ? activeIcon : icon,
-                  color: isSelected 
-                      ? AppTheme.primaryBlue 
+                  color: isSelected
+                      ? AppTheme.primaryBlue
                       : AppTheme.textSecondary,
                   size: 22,
                 ),
@@ -290,19 +286,21 @@ class _SidebarItem extends StatelessWidget {
                       Text(
                         title,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                              color: isSelected 
-                                  ? AppTheme.primaryBlue 
-                                  : AppTheme.textPrimary,
-                            ),
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.w500,
+                          color: isSelected
+                              ? AppTheme.primaryBlue
+                              : AppTheme.textPrimary,
+                        ),
                       ),
                       Text(
                         subtitle,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: isSelected 
-                                  ? AppTheme.primaryBlue.withValues(alpha: 0.7)
-                                  : AppTheme.textTertiary,
-                            ),
+                          color: isSelected
+                              ? AppTheme.primaryBlue.withValues(alpha: 0.7)
+                              : AppTheme.textTertiary,
+                        ),
                       ),
                     ],
                   ),

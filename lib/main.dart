@@ -456,10 +456,12 @@ class ProfessionalHomeScreen extends ConsumerStatefulWidget {
   const ProfessionalHomeScreen({super.key});
 
   @override
-  ConsumerState<ProfessionalHomeScreen> createState() => _ProfessionalHomeScreenState();
+  ConsumerState<ProfessionalHomeScreen> createState() =>
+      _ProfessionalHomeScreenState();
 }
 
-class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen> {
+class _ProfessionalHomeScreenState
+    extends ConsumerState<ProfessionalHomeScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
@@ -482,9 +484,7 @@ class _ProfessionalHomeScreenState extends ConsumerState<ProfessionalHomeScreen>
             currentIndex: _currentIndex,
             onItemSelected: (index) => setState(() => _currentIndex = index),
           ),
-          Expanded(
-            child: _screens[_currentIndex],
-          ),
+          Expanded(child: _screens[_currentIndex]),
         ],
       ),
     );
@@ -590,7 +590,8 @@ class ProfessionalDashboard extends ConsumerWidget {
                               children: [
                                 Text(
                                   'Portfolio Performance',
-                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  style: Theme.of(context).textTheme.titleLarge
+                                      ?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: AppTheme.textPrimary,
                                       ),
@@ -601,7 +602,9 @@ class ProfessionalDashboard extends ConsumerWidget {
                                     vertical: 6,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppTheme.successGreen.withValues(alpha: 0.1),
+                                    color: AppTheme.successGreen.withValues(
+                                      alpha: 0.1,
+                                    ),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
@@ -647,7 +650,8 @@ class ProfessionalDashboard extends ConsumerWidget {
                         children: [
                           CompactMetricCard(
                             label: 'Annual Cash Flow',
-                            value: '\$${_formatCurrency(summary['annualCashFlow'])}',
+                            value:
+                                '\$${_formatCurrency(summary['annualCashFlow'])}',
                             icon: Icons.trending_up,
                             color: AppTheme.successGreen,
                             change: '+15.2%',
@@ -656,7 +660,8 @@ class ProfessionalDashboard extends ConsumerWidget {
                           const SizedBox(height: 16),
                           CompactMetricCard(
                             label: 'Total Equity',
-                            value: '\$${_formatCurrency(summary['totalEquity'])}',
+                            value:
+                                '\$${_formatCurrency(summary['totalEquity'])}',
                             icon: Icons.account_balance,
                             color: AppTheme.primaryBlue,
                             change: '+22.1%',
@@ -665,7 +670,8 @@ class ProfessionalDashboard extends ConsumerWidget {
                           const SizedBox(height: 16),
                           CompactMetricCard(
                             label: 'Avg. Cap Rate',
-                            value: '${(summary['portfolioROI'] * 0.85).toStringAsFixed(1)}%',
+                            value:
+                                '${(summary['portfolioROI'] * 0.85).toStringAsFixed(1)}%',
                             icon: Icons.percent,
                             color: AppTheme.secondaryBlue,
                             change: '+0.8%',
@@ -686,9 +692,9 @@ class ProfessionalDashboard extends ConsumerWidget {
                     Text(
                       'Recent Properties',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: AppTheme.textPrimary,
-                          ),
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.textPrimary,
+                      ),
                     ),
                     TextButton.icon(
                       onPressed: () {
@@ -720,7 +726,8 @@ class ProfessionalDashboard extends ConsumerWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PropertyDetailsScreen(property: property),
+                            builder: (context) =>
+                                PropertyDetailsScreen(property: property),
                           ),
                         );
                       },
@@ -783,12 +790,13 @@ class ProfessionalPropertiesScreen extends ConsumerWidget {
                 const SizedBox(height: 20),
                 Expanded(
                   child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
-                      childAspectRatio: 1.0,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20,
+                          childAspectRatio: 1.0,
+                        ),
                     itemCount: properties.length,
                     itemBuilder: (context, index) {
                       final property = properties[index];
@@ -798,7 +806,8 @@ class ProfessionalPropertiesScreen extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => PropertyDetailsScreen(property: property),
+                              builder: (context) =>
+                                  PropertyDetailsScreen(property: property),
                             ),
                           );
                         },
@@ -843,17 +852,17 @@ class ProfessionalAnalyticsScreen extends StatelessWidget {
                   Text(
                     'Advanced Analytics',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: AppTheme.textPrimary,
-                        ),
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.textPrimary,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Detailed performance charts and market insights\ncoming in the next update.',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppTheme.textSecondary,
-                        ),
+                      color: AppTheme.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -893,17 +902,17 @@ class ProfessionalFinancialScreen extends StatelessWidget {
                   Text(
                     'Financial Management',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: AppTheme.textPrimary,
-                        ),
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.textPrimary,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Track income, expenses, and generate\nfinancial reports for your properties.',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppTheme.textSecondary,
-                        ),
+                      color: AppTheme.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -943,17 +952,17 @@ class ProfessionalCalculatorScreen extends StatelessWidget {
                   Text(
                     'Investment Calculator',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: AppTheme.textPrimary,
-                        ),
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.textPrimary,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Calculate ROI, cash flow, and\nanalyze investment opportunities.',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppTheme.textSecondary,
-                        ),
+                      color: AppTheme.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -993,17 +1002,17 @@ class ProfessionalReportsScreen extends StatelessWidget {
                   Text(
                     'Portfolio Reports',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: AppTheme.textPrimary,
-                        ),
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.textPrimary,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Generate comprehensive reports\nfor tax and investment analysis.',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppTheme.textSecondary,
-                        ),
+                      color: AppTheme.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -1043,17 +1052,17 @@ class ProfessionalSettingsScreen extends StatelessWidget {
                   Text(
                     'Settings & Preferences',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: AppTheme.textPrimary,
-                        ),
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.textPrimary,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Customize your experience and\nmanage account settings.',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppTheme.textSecondary,
-                        ),
+                      color: AppTheme.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -1064,7 +1073,6 @@ class ProfessionalSettingsScreen extends StatelessWidget {
     );
   }
 }
-
 
 // Placeholder tabs
 class FinancialTab extends StatelessWidget {

@@ -107,7 +107,7 @@ class ProfessionalPropertyCard extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Property Details
               Padding(
                 padding: const EdgeInsets.all(20),
@@ -125,7 +125,8 @@ class ProfessionalPropertyCard extends StatelessWidget {
                             children: [
                               Text(
                                 property.name,
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                style: Theme.of(context).textTheme.titleLarge
+                                    ?.copyWith(
                                       fontWeight: FontWeight.w700,
                                       color: AppTheme.textPrimary,
                                     ),
@@ -142,7 +143,10 @@ class ProfessionalPropertyCard extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       property.fullAddress,
-                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
                                             color: AppTheme.textSecondary,
                                           ),
                                       maxLines: 1,
@@ -160,7 +164,8 @@ class ProfessionalPropertyCard extends StatelessWidget {
                           children: [
                             Text(
                               '\$${_formatNumber(property.monthlyRent)}/mo',
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              style: Theme.of(context).textTheme.titleLarge
+                                  ?.copyWith(
                                     fontWeight: FontWeight.w700,
                                     color: AppTheme.successGreen,
                                   ),
@@ -168,7 +173,8 @@ class ProfessionalPropertyCard extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               '\$${_formatNumber(property.currentValue)}',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
                                     color: AppTheme.textSecondary,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -177,9 +183,9 @@ class ProfessionalPropertyCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Property Features
                     Row(
                       children: [
@@ -240,16 +246,17 @@ class ProfessionalPropertyCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Financial Metrics
                     Row(
                       children: [
                         Expanded(
                           child: _FinancialMetric(
                             label: 'Cash Flow',
-                            value: '\$${_formatNumber(property.monthlyCashFlow)}',
+                            value:
+                                '\$${_formatNumber(property.monthlyCashFlow)}',
                             isPositive: property.monthlyCashFlow >= 0,
                           ),
                         ),
@@ -362,17 +369,17 @@ class _FinancialMetric extends StatelessWidget {
         Text(
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppTheme.textTertiary,
-                fontWeight: FontWeight.w500,
-              ),
+            color: AppTheme.textTertiary,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         const SizedBox(height: 2),
         Text(
           value,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: isPositive ? AppTheme.successGreen : AppTheme.errorRed,
-              ),
+            fontWeight: FontWeight.w600,
+            color: isPositive ? AppTheme.successGreen : AppTheme.errorRed,
+          ),
         ),
       ],
     );

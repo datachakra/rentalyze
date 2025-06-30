@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-class ProfessionalAppBar extends StatelessWidget implements PreferredSizeWidget {
+class ProfessionalAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
   final String title;
   final String? subtitle;
   final List<Widget>? actions;
@@ -22,9 +23,7 @@ class ProfessionalAppBar extends StatelessWidget implements PreferredSizeWidget 
     return Container(
       decoration: const BoxDecoration(
         color: AppTheme.surfaceWhite,
-        border: Border(
-          bottom: BorderSide(color: AppTheme.surfaceGray200),
-        ),
+        border: Border(bottom: BorderSide(color: AppTheme.surfaceGray200)),
       ),
       child: SafeArea(
         child: Padding(
@@ -38,14 +37,15 @@ class ProfessionalAppBar extends StatelessWidget implements PreferredSizeWidget 
                   color: AppTheme.textSecondary,
                 ),
               if (leading != null) leading!,
-              
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
                             fontWeight: FontWeight.w700,
                             color: AppTheme.textPrimary,
                           ),
@@ -55,14 +55,14 @@ class ProfessionalAppBar extends StatelessWidget implements PreferredSizeWidget 
                       Text(
                         subtitle!,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppTheme.textSecondary,
-                            ),
+                          color: AppTheme.textSecondary,
+                        ),
                       ),
                     ],
                   ],
                 ),
               ),
-              
+
               if (actions != null) ...actions!,
             ],
           ),
@@ -115,11 +115,7 @@ class _ProfessionalSearchBarState extends State<ProfessionalSearchBar> {
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Icon(
-              Icons.search,
-              color: AppTheme.textMuted,
-              size: 20,
-            ),
+            child: Icon(Icons.search, color: AppTheme.textMuted, size: 20),
           ),
           Expanded(
             child: TextField(
@@ -134,10 +130,7 @@ class _ProfessionalSearchBarState extends State<ProfessionalSearchBar> {
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
               ),
-              style: const TextStyle(
-                fontSize: 14,
-                color: AppTheme.textPrimary,
-              ),
+              style: const TextStyle(fontSize: 14, color: AppTheme.textPrimary),
             ),
           ),
           if (_controller.text.isNotEmpty)
